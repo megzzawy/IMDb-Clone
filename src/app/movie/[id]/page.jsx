@@ -1,6 +1,21 @@
 import Image from 'next/image'
 import React from 'react'
 
+
+export async function generateStaticParams() {
+    // Fetch popular movies to pre-render
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`
+    );
+    const data = await res.json();
+    
+    return data.results.map((movie) => ({
+      id: movie.id.toString(),
+    }));
+  }
+  
+
+
 export default async function MoviePage({params}) {
     const movieId = params.id
     const res = await fetch (`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.API_KEY}`, {next: {revalidate: 10000}})
