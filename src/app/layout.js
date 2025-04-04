@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Providers from "./Providers";
 import Navbar from "@/components/Navbar";
 import SearchBox from "@/components/SearchBox";
+import { Suspense } from 'react'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,14 +23,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en"  suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-          <Header/>
-          <Navbar/>
-          <SearchBox/>
+          <Header />
+          {/* Wrap Navbar and SearchBox in Suspense */}
+          <Suspense fallback={<div className="h-10 bg-gray-200 animate-pulse"></div>}>
+            <Navbar />
+          </Suspense>
+          <Suspense fallback={<div className="h-10 bg-gray-200 animate-pulse"></div>}>
+            <SearchBox />
+          </Suspense>
           {children}
         </Providers>
       </body>
